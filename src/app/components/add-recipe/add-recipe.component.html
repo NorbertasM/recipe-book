@@ -1,0 +1,81 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">Naujas receptas</div>
+    <div class="card-body">
+      <form [formGroup]="recipeForm">
+        <div class="mb-3">
+          <label for="" class="form-label">Recepto pavadinimas</label>
+          <input type="text" class="form-control" formControlName="name">
+          <span *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched">Recepto pavadinimas yra privalomas, taip pat ne ilgesnis nei 30 simbolių</span>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Gaminimo trukmė(minutėmis)</label>
+          <input type="number" class="form-control" formControlName="cookingTime">
+          <span *ngIf="!recipeForm.get('cookingTime')?.valid && recipeForm.get('cookingTime')?.touched">Gaminimo trukmė yra privaloma ir įvedama 5 minučių intervalais</span>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Gaminimo aprašymas</label>
+          <textarea class="form-control" formControlName="description"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Nuotraukos URL</label>
+          <input type="text" class="form-control" formControlName="picture">
+          <span *ngIf="!recipeForm.get('picture')?.valid && recipeForm.get('picture')?.touched">Netinkamas nuotraukos URL</span>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Kalorijos</label>
+          <input type="number" class="form-control" formControlName="calories">
+        </div>
+        <hr>
+        <div class="mb-3" formArrayName="allergens">
+          <h4>Alergenai</h4>
+          <div class="row mb-3" *ngFor="let allergen of allergens(); let i = index">
+            <div class="col-8">
+              <select class="form-control" [formControlName]="i" (ngModelChange)="onSelect($event, i)">
+                <option [ngValue]="null" disabled>Pasirinkite alergeną</option>
+                <option *ngFor="let allergen of getAllergensOptions(i)" [ngValue]="allergen">{{allergen}}</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <button type="button" class="btn btn-danger" (click)="removeAllergen(i)">Pašalinti</button>
+            </div>
+          </div>
+          <div>
+            <button [disabled]="isAddAllergensDisabled()" (click)="addAllergen()" type="button" class="btn btn-info">Pridėti alergeną</button>
+          </div>
+        </div>
+        <hr>
+        <div class="mb-3" formArrayName="ingredients">
+          <h4>Adresai</h4>
+          <div *ngFor="let ingredient of ingredients(); let i = index" [formGroup]="abstractToFormGroup(ingredient)">
+            <div class="row mb-3 align-items-end">
+              <div class="col-4">
+                  <label for="" class="form-label">Ingridientas</label>
+                  <input type="text" class="form-control" formControlName="name">
+              </div>
+              <div class="col-2">
+                  <label for="" class="form-label">Kiekis</label>
+                  <input type="number" class="form-control" formControlName="ammount">
+              </div>
+              <div class="col-4">
+                  <label for="" class="form-label">Matavimo vienetai</label>
+                  <select class="form-control" formControlName="units">
+                    <option [ngValue]="null" disabled>Pasirinkite vienetą</option>
+                    <option *ngFor="let unit of getUnitsOptions()" [ngValue]="unit">{{ unit }}</option>
+                  </select>
+              </div>
+              <div class="col-2">
+                  <button class="btn btn-danger" (click)="removeIngredient(i)">Pašalinti</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-info" (click)="addIngredient()">Pridėti ingridientą</button>
+          </div>
+        </div>
+        <hr>
+        <button [disabled]="!recipeForm.valid" type="submit" class="btn btn-success" (click)="onSubmit()">Pridėti receptą</button>
+      </form>
+    </div>
+  </div>
+</div>

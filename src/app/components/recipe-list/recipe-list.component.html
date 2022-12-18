@@ -1,0 +1,42 @@
+<div class="col-md-12 mb-3">
+  <div class="row">
+    <div class="col-4 mb-2" *ngFor="let recipe of recipes">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="text-center">
+            {{ recipe.name }}
+          </h1>
+        </div>
+        <div class="card-body">
+          <img src={{recipe.picture}} width="100%">
+          <p>{{ recipe.description }}</p>
+          <div class="row justify-content-between border-bottom">
+            <div class="col">Paruošimo laikas</div>
+            <div class="col text-end">
+                {{ recipe.cookingTime }} minučių
+            </div>
+          </div>
+          <div class="row justify-content-between border-bottom">
+            <div class="col">Kalorijos</div>
+            <div class="col text-end">{{ recipe.calories || '-' }}</div>
+          </div>
+          <div class="row justify-content-between border-bottom" *ngIf="recipe.allergens && recipe.allergens.length > 0">
+            <div class="col">Alergenai</div>
+            <div class="col text-end">
+              <div *ngFor="let allergen of recipe.allergens">{{ allergen }}</div>
+            </div>
+          </div>
+          <div class="row" *ngIf="recipe.ingredients && recipe.ingredients.length > 0">
+            <div class="col">
+              <h3 class="text-center border-dark border-bottom">Ingridientai</h3>
+              <div class="row justify-content-between border-bottom" *ngFor="let ingredient of recipe.ingredients">
+                <div class="col">{{ ingredient.name }}</div>
+                <div class="col text-end">{{ ingredient.ammount }} {{ ingredient.units }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
