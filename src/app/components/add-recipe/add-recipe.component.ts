@@ -22,10 +22,9 @@ export class AddRecipeComponent implements OnInit {
     ) {
     this.recipeForm = new FormGroup({
       'name': new FormControl(null, [Validators.required, Validators.maxLength(30)]),
-      'cookingTime': new FormControl(null, [Validators.required, this.validateCookingTime]),
+      'cookingTime': new FormControl(null, [this.validateCookingTime]),
       'description': new FormControl(null, [Validators.required]),
-      'picture': new FormControl(null, [Validators.required, this.validateUrl]),
-      // 'picture': new FormControl(null, [Validators.pattern(new RegExp('/^(ftp|http|https):\/\/[^ "]+$/'))]),
+      'picture': new FormControl(null, [Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)]),
       'calories': new FormControl(),
       'allergens': new FormArray([]),
       'ingredients': new FormArray([])
@@ -43,7 +42,7 @@ export class AddRecipeComponent implements OnInit {
     this.selectedAllergens.splice(index, 0, val)
   }
 
-  validateCookingTime(control: FormControl): Record<string, boolean> | null {
+  validateCookingTime(control: AbstractControl): Record<string, boolean> | null {
     if (control.value > 0 && control.value % 5 !== 0) {
       return { 'Gaminimo laikas turi būti įvestas 5 intervale': true }
     } else {
@@ -55,13 +54,6 @@ export class AddRecipeComponent implements OnInit {
     return AddRecipeComponent.alergenai.length === (<FormArray>this.recipeForm.get('allergens'))?.length
   }
 
-  validateUrl(control: FormControl): Record<string, boolean> | null {
-    if (control.value  && !/^(ftp|http|https):\/\/[^ "]+$/.test(control.value)) {
-      return { 'Nuotraukos URL neatitinka formato': true }
-    } else {
-      return null
-    }
-  }
 
   addAllergen() {
     const allergen = new FormControl(null, [Validators.required]);
